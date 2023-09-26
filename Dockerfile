@@ -17,4 +17,4 @@ EXPOSE 80
 ENV NAME World
 
 # Run chatgpt2.py when the container launches
-CMD ["python", "chatgpt2.py"]
+CMD ["python", "/app/chatgpt2.py"]
