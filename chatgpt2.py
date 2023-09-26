@@ -3,6 +3,7 @@ import json
 import requests
 import zipfile
 from io import BytesIO
+import os
 
 
 # Sending vulnerable code snippet to ChatGPT and get remediation response. 
