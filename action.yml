@@ -1,0 +1,15 @@
+name: 'ChatGPT Remediation'
+description: 'Processes CodeQL vulnerabilities with ChatGPT'
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+  openai-api:
+    description: 'OpenAI API Key'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        python chatgpt2.py
+      shell: bash
