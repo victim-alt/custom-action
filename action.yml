@@ -8,8 +8,5 @@ inputs:
     description: 'OpenAI API Key'
     required: true
 runs:
-  using: 'composite'
-  steps:
-    - run: |
-        python chatgpt2.py
-      shell: bash
+  using: 'docker'
+  image: 'Dockerfile'
