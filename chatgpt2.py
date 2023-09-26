@@ -58,6 +58,8 @@ def get_sarif_filepath(token):
     for artifact in artifacts:
         if artifact['name'] == 'codeql-sarif':
             return artifact['archive_download_url']
+
+    print(f"Artifact 'codeql-sarif' not found among artifacts.")
     return None
 
 
