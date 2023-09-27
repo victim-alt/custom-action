@@ -137,54 +137,70 @@ def create_github_issue(token, repo_name, title, body):
 
 def process_vulnerabilities(sarif_file_url, api_key, github_token, repo_name):
     chat_app = ChatApp(api_key)
+
+     with open(sarif_file_path, 'r') as f:
+        sarif_content = json.load(f)
     
-    headers = {
-    "Authorization": f"token {github_token}",
-    "Accept": "application/vnd.github.v3+json"
-    }
+    # headers = {
+    # "Authorization": f"token {github_token}",
+    # "Accept": "application/vnd.github.v3+json"
+    # }
 
     # Artifacts are stored in the form of zip.
     # response = requests.get(sarif_file_url, headers=headers)
+   
+    # print(response.headers.get('Content-Type'))
+    # if response.status_code != 200:
+    #     print(f"Unexpected status code: {response.status_code}")
+    #     print(response.text[:500])  # print first 500 characters of the response   
+    #     return
 
-    with open(sarif_file_path, 'r') as f:
-        sarif_content = json.load(f)
+
+    # with zipfile.ZipFile(BytesIO(response.content)) as z:
+    #     # List of all SARIF files in the ZIP
+    #     sarif_files = [name for name in z.namelist() if name.endswith('.sarif')]
+
+
+        # Process each SARIF file
+        # for sarif_file in sarif_files:
+        #     with z.open(sarif_file) as f:
+        #         sarif_content = json.load(f)
 
                 # Iterate through the vulnerabilities   
-            for run in sarif_content.get('runs', []):
-                for result in run.get('results', []):
-                    message = result.get('message', {}).get('text', '')
+                for run in sarif_content.get('runs', []):
+                    for result in run.get('results', []):
+                        message = result.get('message', {}).get('text', '')
 
-                    locations = result.get('locations', [])
-                    if locations:
-                        location = locations[0]
-                        file_path = location['physicalLocation']['artifactLocation']['uri']
-                        start_line = location['physicalLocation']['region']['startLine']
-                        nd_line = location['physicalLocation']['region'].get('endLine', start_line)
+                        locations = result.get('locations', [])
+                        if locations:
+                            location = locations[0]
+                            file_path = location['physicalLocation']['artifactLocation']['uri']
+                            start_line = location['physicalLocation']['region']['startLine']
+                            end_line = location['physicalLocation']['region'].get('endLine', start_line)
 
-                        print(f"Vulnerability found in {file_path} from line {start_line} to line {end_line}")
+                            print(f"Vulnerability found in {file_path} from line {start_line} to line {end_line}")
 
                         
-                        # Fetch the vulnerable code snippet from the repo
-                        code_snippet = get_code_snippet_from_location(github_token, repo_name, file_path, start_line, end_line) 
+                            # Fetch the vulnerable code snippet from the repo
+                            code_snippet = get_code_snippet_from_location(github_token, repo_name, file_path, start_line, end_line) 
 
-                        chat_input = f"{message}\n\nCode Snippet:\n\n{code_snippet}"
+                            chat_input = f"{message}\n\nCode Snippet:\n\n{code_snippet}"
 
-                        # Get remediation from ChatGPT
-                        print(f"Sending to ChatGPT:\n{chat_input}")
-                        fix = chat_app.chat(chat_input)
-                        print(f"Recommended Fix for {file_path} (lines {start_line}-{end_line}): {fix}\n\n")
+                            # Get remediation from ChatGPT
+                            print(f"Sending to ChatGPT:\n{chat_input}")
+                            fix = chat_app.chat(chat_input)
+                            print(f"Recommended Fix for {file_path} (lines {start_line}-{end_line}): {fix}\n\n")
 
 
-                        # Create a GitHub issue for this vulnerability
-                        issue_title = f"Vulnerability detected in {file_path} from line {start_line} to line {end_line}"
-                        issue_body = f"{message}\n\nCode Snippet:\n\n{code_snippet}\n\nRecommended Fix:\n\n{fix}"
-                        issue_url = create_github_issue(github_token, repo_name, issue_title, issue_body)
+                            # Create a GitHub issue for this vulnerability
+                            issue_title = f"Vulnerability detected in {file_path} from line {start_line} to line {end_line}"
+                            issue_body = f"{message}\n\nCode Snippet:\n\n{code_snippet}\n\nRecommended Fix:\n\n{fix}"
+                            issue_url = create_github_issue(github_token, repo_name, issue_title, issue_body)
         
-                        if issue_url:
-                            print(f"Issue created successfully: {issue_url}")
-                        else:
-                            print("Error creating issue.")
-
+                            if issue_url:
+                                print(f"Issue created successfully: {issue_url}")
+                            else:
+                                print("Error creating issue.")
 
 
 
