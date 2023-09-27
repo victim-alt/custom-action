@@ -41,7 +41,7 @@ def get_sarif_filepath(token):
 
 
     headers = {
-        "Authorization": f"token {token}",
+        "Authorization":f" Bearer {token}",
         "Accept": "application/vnd.github.v3+json"
     }
     url = "https://api.github.com/repos/victim-alt/demo-vulnerable-nodejs/actions/artifacts"  
@@ -137,7 +137,7 @@ def process_vulnerabilities(sarif_file_url, api_key, github_token, repo_name):
     chat_app = ChatApp(api_key)
     
     headers = {
-    "Authorization": f"token {github_token}",
+    "Authorization":f" Bearer {github_token}",
     "Accept": "application/vnd.github.v3+json"
     }
 
