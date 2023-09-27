@@ -152,5 +152,5 @@ if __name__ == "__main__":
     repo_name = 'victim-alt/demo-vulnerable-nodejs'
 
 
-sarif_file_path = "codeql-sarif/analysis.sarif"
+sarif_file_path = "/home/runner/work/demo-vulnerable-nodejs/results/javascript.sarif"
 process_vulnerabilities(sarif_file_path, openai_api_key, github_token, repo_name)  
