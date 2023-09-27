@@ -41,7 +41,7 @@ def get_sarif_filepath(token):
 
 
     headers = {
-        "Authorization":f" Bearer {token}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3+json"
     }
     url = "https://api.github.com/repos/victim-alt/demo-vulnerable-nodejs/actions/artifacts"  
@@ -71,7 +71,7 @@ def get_code_snippet_from_location(token, repo_name, file_path, start_line, end_
     url = f"https://api.github.com/repos/{repo_name}/contents/{file_path}"
     
     headers = {
-        "Authorization": f"token {token}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3.raw+json"
     }
 
@@ -112,7 +112,7 @@ def create_github_issue(token, repo_name, title, body):
     url = f"https://api.github.com/repos/{repo_name}/issues"
 
     headers = {
-        "Authorization": f"token {token}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3+json"
     }
 
@@ -137,7 +137,7 @@ def process_vulnerabilities(sarif_file_url, api_key, github_token, repo_name):
     chat_app = ChatApp(api_key)
     
     headers = {
-    "Authorization":f" Bearer {github_token}",
+    "Authorization": f"Bearer {github_token}",
     "Accept": "application/vnd.github.v3+json"
     }
 
